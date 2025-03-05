@@ -1,0 +1,11 @@
+# Stage 1: Build environment
+FROM [base-image] AS [stage-name]
+# Install build tools, compile code, etc.
+
+# Stage 2: Runtime environment
+FROM [lightweight-base-image]
+# Copy artifacts from the build stage
+CMD/ENTRYPOINT [run-your-app]
+
+=======================
+
