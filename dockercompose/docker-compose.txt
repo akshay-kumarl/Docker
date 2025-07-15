@@ -1,0 +1,56 @@
+version: "3.9"
+
+services:
+  app:
+    image: spring-boot-mysql-app
+    container_name: spring-app
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/sbms
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+    networks:
+      - spring-net
+    volumes:
+      - spring-app-data:/data/springboot
+
+  db:
+    image: mysql:5.7
+    container_name: mysql-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: sbms
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - spring-net
+
+volumes:
+  mysql-data:
+  spring-app-data:
+
+networks:
+  spring-net:
+
+
+
+
+save as docker-compose.yml
+can be saved any name 
+  if used other name 
+  docker-compose up -d -f ./path
+======================================
+  app:
+#     build: .
+
+app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+======================================
+  
