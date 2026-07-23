@@ -14,7 +14,7 @@ CMD/ENTRYPOINT [run-your-app]
 multistage example
 
 
-FROM maven AS buildstage
+FROM maven AS buildstage # any name can be given for buildstage or build or bb 
 RUN mkdir /opt/mindciruit17d
 WORKDIR /opt/mindcircuit17d
 COPY . .
@@ -44,5 +44,8 @@ Exit Code	Meaning
 137	SIGKILL (128+9) - forcibly killed
 143	SIGTERM (128+15) - graceful termination
 255	Exit status out of range
+
+
+
 
 
