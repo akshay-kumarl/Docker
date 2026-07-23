@@ -9,3 +9,40 @@ CMD/ENTRYPOINT [run-your-app]
 
 =======================
 
+
+
+multistage example
+
+
+FROM maven AS buildstage
+RUN mkdir /opt/mindciruit17d
+WORKDIR /opt/mindcircuit17d
+COPY . .
+RUN mvn clean install 
+
+FROM tomcat 
+WORKDIR webapps
+COPY —from=buildstage /opt/mindcircuit17d/target/*.war
+RUN  rm -rf ROOT && \
+           mv *.war ROOT.war
+EXPOSE 8080 
+
+
+==============================================
+
+troubleshooting commands
+
+docker inspect 3aa --format='{{.State.ExitCode}}'
+
+docker inspect 3aa --format='{{.State.FinishedAt}}'
+
+
+
+Exit Code	Meaning
+0	Success (normal exit)
+1	General error (application error)
+137	SIGKILL (128+9) - forcibly killed
+143	SIGTERM (128+15) - graceful termination
+255	Exit status out of range
+
+
