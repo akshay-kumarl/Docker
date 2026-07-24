@@ -83,3 +83,9 @@ docker-compose build
 
 `docker run --memory=512m --cpus=1 <image_name>`
 
+
+
+docker save
+docker export 
+
+how to save running container to tar file
