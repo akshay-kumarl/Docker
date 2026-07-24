@@ -28,6 +28,24 @@ RUN  rm -rf ROOT && \
 EXPOSE 8080 
 
 
+
+=======================
+EXAMPLE-2
+
+
+
+FROM amazonlinux AS build
+RUN yum update && \
+          yum install -y go
+WORKDIR /app
+ENV GO111MODULE=off
+COPY . .
+RUN go build app.go
+
+FROM scratch
+COPY —from=build /app/calculator /app/calculator
+CMD [“/app/calcluator”]
+
 ==============================================
 
 troubleshooting commands
