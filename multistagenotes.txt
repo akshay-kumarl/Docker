@@ -1,3 +1,14 @@
+MULTISTAGE DOCKER
+
+
+=======================
+important links
+
+https://devopscube.com/reduce-docker-image-size/
+
+
+
+=======================
 # Stage 1: Build environment
 FROM [base-image] AS [stage-name]
 # Install build tools, compile code, etc.
@@ -45,6 +56,26 @@ RUN go build app.go
 FROM scratch
 COPY —from=build /app/calculator /app/calculator
 CMD [“/app/calcluator”]
+
+=======================
+
+EXAMPLE-3
+
+
+
+FROM amazonlinux
+RUN yum update && \
+          yum install -y go
+WORKDIR /app
+ENV GO111MODULE=off
+COPY . .
+RUN go build app.go
+
+FROM scratch
+COPY —from=0 /app/calculator /app/calculator
+CMD [“/app/calcluator”]
+
+
 
 ==============================================
 
