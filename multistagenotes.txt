@@ -97,4 +97,29 @@ Exit Code	Meaning
 
 
 
+==============================================
+EXAMPLE-4 nodejs app
+
+
+FROM node:20-alpine AS build
+WORKDIR /app
+
+COPY package*.json ./
+RUN npm ci
+
+COPY . .
+
+
+FROM node:20-alpine
+WORKDIR /app
+COPY --from=build /app .
+
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+USER appuser
+
+EXPOSE 3000
+
+CMD ["npm", "start"]
+
+
 
