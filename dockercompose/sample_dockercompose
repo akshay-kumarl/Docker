@@ -2,6 +2,7 @@ version: '3.8'
 services:
   app:
     image: node:14
+    container_name: spring-app
     working_dir: /app
     volumes:
       - ./:/app                 # Mount the current directory to /app inside the container
