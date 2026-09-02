@@ -1,0 +1,120 @@
+official github repo link  --> https://github.com/aquasecurity/trivy
+
+
+TRIVY :
+https://github.com/aquasecurity/trivy/
+
+
+
+rpm -ivh  xyz.rpm
+rpm -Uvh xyz.rpm
+
+rpm -ivh https://github.com/aquasecurity/trivy/releases/download/v0.70.0/trivy_0.70.0_Linux-64bit.rpm
+
+
+IMAGE SCANNING using TRIVY 
+
+Trivy is an open-source vulnerability and security scanner created by Aqua Security.
+
+CVE = Common Vulnerabilities and Exposures
+ - Scans for vulnerabilities (CVEs) in   
+  
+            Container images (Docker, OCI)          
+            File systems and directories          
+            Git repositories          
+            Infrastructure as Code (IaC) (Terraform, Kubernetes manifests, Helm charts)                
+            Cloud environments
+  
+ - Detects misconfigurations and sensitive information (secrets, tokens, passwords) in code.
+  
+ - Supports CVE databases (like NVD, GitHub Security Advisories) and can be updated frequently.
+ 
+ 
+ 
+ WGET --> download --> bin / start 
+ 
+ sonarqube --> docker 
+ 
+ RPM : 
+
+  rpm -ivh 
+
+  rpm - Uvh 
+-------------------------------
+ PIPELINE INTEGRATING TRIVY :
+ 
+ pipeline {
+    agent any
+
+
+     tools { 
+        maven 'maven3' 
+    }
+	
+	stages {
+	
+    stage('Checkout') { 
+            steps { 
+                echo 'Cloning GIT HUB Repo' 
+                // Clone the specified branch from the GitHub repository 
+                git branch: 'main', url: 'https://github.com/devopstraininghub/mindcircuit17d.git'
+            }   
+        } 
+	
+	
+      stage('SonarQube Scan') {
+      steps {
+             echo 'Scanning project'
+            sh 'ls -ltr'
+        
+        sh '''
+            mvn sonar:sonar \
+                -Dsonar.host.url=http://13.220.82.203:9000 \
+                -Dsonar.login=squ_f21d96bcca2ac0be12229663009aa66157fa8e45
+        '''
+         }
+       }
+	
+        stage('Build Artifact') { 
+            steps { 
+                echo 'Build Artifact' 
+                sh 'mvn clean package' 
+            } 
+        } 
+	
+	
+	
+      stage('Build Docker Image') { 
+            steps { 
+                echo 'Build Docker Image' 
+ 
+                sh 'docker build -t devopshubg333/batch17d:${BUILD_NUMBER} -f Dockerfile .' 
+            } 
+        } 
+	
+	stage('Scan Docker Image using Trivy') { 
+            steps { 
+                echo 'scanning Image' 
+               
+               
+                sh 'trivy image devopshubg333/batch17d:${BUILD_NUMBER}' 
+            } 
+        } 
+	
+	
+	  stage('Push to Docker Hub') { 
+            steps { 
+                script { 
+                 
+                  	withCredentials([string(credentialsId: 'dockerhub', variable: 'dockerhub')]) {
+                         sh 'docker login -u devopshubg333 -p ${dockerhub}' 
+	
+                      }
+                    // Push the Docker image to Docker Hub 
+                    sh 'docker push devopshubg333/batch16d:${BUILD_NUMBER}' 
+                    echo 'Pushed to Docker Hub' 
+                } 
+            } 
+        } 
+	
+	
